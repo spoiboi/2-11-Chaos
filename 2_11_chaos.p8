@@ -70,10 +70,8 @@ function get_input()
 		_init()
 	end
 	if btnp(5) then
-		if jokers.fries.active then
-			jokers.fries.active = false
-		else
-			jokers.fries.active = true
+		if jokers.fries.active==false then
+			activate_joker("fries")
 		end
 	end
 end
@@ -164,10 +162,8 @@ end
 function draw_jokers()
 	i = 0
 	for v in all(had_jokers) do
-		if v.active then
-			spr(v.icon, 20+(i*10), 100)
- 		i=i+1
- 	end
+		spr(v.icon, 20+(i*10), 100)
+ 	i=i+1
  end
 end
 
@@ -381,17 +377,42 @@ function make_jokers()
 	jokers = {}
 	had_jokers = {}
 	
-	fries = {active=true, icon=7}
-	stalk = {active=true, icon=5}
+	fries = {active=false, icon=5}
+	stalk = {active=false, icon=7}
 	
-	add(had_jokers, fries)
+	
 	jokers.fries = fries
-	add(had_jokers, stalk) 
+	
 	jokers.stalk = stalk
 end
 
-function apply_static_jokers()
+function activate_joker(name)
+	add(had_jokers, jokers[name])
+	jokers[name].active=true
+end
 
+function deactivate_joker(name)
+	del(had_jokers, jokers[name])
+	jokers[name].active=false
+end
+
+function apply_static_jokers()
+	if jokers.fries.active==true then
+		expand_width()
+	end
+end
+
+function expand_width()
+	if manager.width != 5 then
+		manager.width = 5
+		for i=1, manager.height do
+			grid[i][5] = {}
+			grid[i][5].x = 12+(16*5)
+			grid[i][5].y = 12+(16*i)
+			grid[i][5].val = 0
+			grid[i][5].hard = false
+		end
+	end
 end
 __gfx__
 0000000066666666666666666dddddddddddddd60000000000000000000b33000000000006600000000000000000000000000000000000000000000000000000
