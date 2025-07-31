@@ -9,13 +9,13 @@ function _init()
 	make_manager()
 	make_grid()
 	make_colors()
-	define_all_jokers()
-	make_pjokers()
+	make_jokers()
 	place_new_tile()
 end
 
 function _update()
 	get_input()
+	apply_static_jokers()
 	if manager.state==1 then
 		make_soft()
 		if manager.has_changed==true then
@@ -69,6 +69,13 @@ function get_input()
 	if btnp(4) and manager.state == 2 then
 		_init()
 	end
+	if btnp(5) then
+		if jokers.fries.active then
+			jokers.fries.active = false
+		else
+			jokers.fries.active = true
+		end
+	end
 end
 
 function make_manager()
@@ -78,6 +85,7 @@ function make_manager()
 	manager.has_changed=true
 	manager.score = 0
 	manager.state = 0
+	manager.test_bool = false
 end
 
 function make_grid()
@@ -155,11 +163,12 @@ end
 
 function draw_jokers()
 	i = 0
- for v in all(pjokers) do
- 	spr(v.icon, 20+(i*10), 100)
- 	i=i+1
+	for v in all(had_jokers) do
+		if v.active then
+			spr(v.icon, 20+(i*10), 100)
+ 		i=i+1
+ 	end
  end
-
 end
 
 -->8
@@ -367,25 +376,22 @@ function get_neighbors(x,y)
 
 end
 -->8
--- joker logic
-function make_joker(icon,name)
-	dic = {}
-	dic.icon = icon
-	dic.name = name
-	return dic
-end
-
-function define_all_jokers()
-	all_jokers= {}
+--jokers
+function make_jokers()
+	jokers = {}
+	had_jokers = {}
 	
-	all_jokers["stalk"]=make_joker(7,"stalk")
-	all_jokers["fries"]=make_joker(5,"fries")
+	fries = {active=true, icon=7}
+	stalk = {active=true, icon=5}
+	
+	add(had_jokers, fries)
+	jokers.fries = fries
+	add(had_jokers, stalk) 
+	jokers.stalk = stalk
 end
 
-function make_pjokers()
-	pjokers = {}
-	add(pjokers, all_jokers["stalk"])
-	add(pjokers, all_jokers["fries"])
+function apply_static_jokers()
+
 end
 __gfx__
 0000000066666666666666666dddddddddddddd60000000000000000000b33000000000006600000000000000000000000000000000000000000000000000000
