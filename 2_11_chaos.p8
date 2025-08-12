@@ -69,6 +69,7 @@ function get_input()
 	if btnp(4) and manager.state == 2 then
 		_init()
 	end
+	--[[
 	if btnp(5) then
 		if jokers.fries.active==false then
 			activate_joker("fries")
@@ -76,6 +77,7 @@ function get_input()
 			activate_joker("stalk")
 		end
 	end
+	]]
 end
 
 function make_manager()
