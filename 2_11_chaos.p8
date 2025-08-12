@@ -69,11 +69,15 @@ function get_input()
 	if btnp(4) and manager.state == 2 then
 		_init()
 	end
+	--[[
 	if btnp(5) then
 		if jokers.fries.active==false then
 			activate_joker("fries")
+		elseif jokers.stalk.active==false then
+			activate_joker("stalk")
 		end
 	end
+	]]
 end
 
 function make_manager()
@@ -83,7 +87,6 @@ function make_manager()
 	manager.has_changed=true
 	manager.score = 0
 	manager.state = 0
-	manager.test_bool = false
 end
 
 function make_grid()
@@ -170,9 +173,10 @@ end
 -->8
 --game logic
 
+--test function
 function place_random_tile()
- row = flr(rnd(4))+1
- col = flr(rnd(4))+1
+ row = flr(rnd(manager.height))+1
+ col = flr(rnd(manager.width))+1
  if grid[row][col].val == 0 then
  	val = flr(rnd(12))+1
  	grid[row][col].val=val
@@ -186,8 +190,8 @@ end
 function place_new_tile()
 	temp = true
 	while temp == true do
-		row = flr(rnd(4))+1
-	 col = flr(rnd(4))+1
+		row = flr(rnd(manager.height))+1
+	 col = flr(rnd(manager.width))+1
 	 if grid[row][col].val == 0 then
 	 	new_val =1
 	 	if (flr(rnd(8))+1) == 1 then
@@ -382,7 +386,6 @@ function make_jokers()
 	
 	
 	jokers.fries = fries
-	
 	jokers.stalk = stalk
 end
 
@@ -400,6 +403,9 @@ function apply_static_jokers()
 	if jokers.fries.active==true then
 		expand_width()
 	end
+	if jokers.stalk.active==true then
+	 expand_height()
+	end
 end
 
 function expand_width()
@@ -411,6 +417,20 @@ function expand_width()
 			grid[i][5].y = 12+(16*i)
 			grid[i][5].val = 0
 			grid[i][5].hard = false
+		end
+	end
+end
+
+function expand_height()
+	if manager.height != 5 then
+		manager.height = 5
+		grid[5] = {}
+		for i=1, manager.width do
+			grid[5][i] = {}
+			grid[5][i].x = 12+(16*i)
+			grid[5][i].y = 12+(16*5)
+			grid[5][i].val = 0
+			grid[5][i].hard = false
 		end
 	end
 end
